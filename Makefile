@@ -56,7 +56,7 @@ SymTabEmptyException.class: SymTabEmptyException.java
 ###
 # test
 ###
-test:
+test: P6.class
 	java -cp $(CP) P6 test.bach test.s
 
 ###
