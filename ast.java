@@ -150,7 +150,7 @@ class ProgramNode extends ASTnode {
      * codeGen
      ***/
     public void codeGen() {
-        // TODO: complete this
+        myDeclList.codeGen();
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -198,6 +198,15 @@ class DeclListNode extends ASTnode {
     public void typeCheck() {
         for (DeclNode node : myDecls) {
             node.typeCheck();
+        }
+    }
+
+    /***
+     * codeGen
+     ***/
+    public void codeGen() {
+        for (DeclNode decl : myDecls) {
+            decl.codeGen();
         }
     }
 
@@ -401,6 +410,8 @@ abstract class DeclNode extends ASTnode {
 
     // default version of typeCheck for non-function decls
     public void typeCheck() { }
+
+    abstract public void codeGen();
 }
 
 class VarDeclNode extends DeclNode {
@@ -505,6 +516,13 @@ class VarDeclNode extends DeclNode {
         
         return sym;
     } 
+
+    // Should only be called on global variable declarations
+    public void codeGen() {
+        Codegen.generate(".data");
+        Codegen.generate(".align", " 2");
+        Codegen.generateLabeled("_" + myId.name(), ".space", "global var - " + myType.type().toString(), " 4");
+    }
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -620,6 +638,9 @@ class FuncDeclNode extends DeclNode {
         myBody.typeCheck(myType.type());
     }
 
+    // TODO
+    public void codeGen() {}
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myType.unparse(p, 0);
@@ -698,6 +719,9 @@ class FormalDeclNode extends DeclNode {
         return sym;
     }
 
+    // TODO
+    public void codeGen() {}
+
     public void unparse(PrintWriter p, int indent) {
         myType.unparse(p, 0);
         p.print(" ");
@@ -763,6 +787,9 @@ class StructDeclNode extends DeclNode {
         
         return null;
     }
+
+    // TODO
+    public void codeGen() {}
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -865,6 +892,8 @@ class StructNode extends TypeNode {
 // ****  StmtNode and its subclasses
 // **********************************************************************
 
+// BE ADVISED:
+// Strongly suggested to write codegen for WriteStmtNodes first.
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTab symTab); 
     abstract public void typeCheck(Type retType); 
