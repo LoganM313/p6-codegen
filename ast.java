@@ -973,6 +973,8 @@ class AssignStmtNode extends StmtNode {
 
     // TODO
     public void codeGen(String returnLabel) {
+        myAssign.codeGen();
+        Codegen.generateWithComment("addu", "Ignore assignExp's value in stack", Codegen.SP, Codegen.SP, "4");
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1330,8 +1332,19 @@ class ReadStmtNode extends StmtNode {
         }
     }
 
-    // TODO
+    // seems to work...
     public void codeGen(String returnLabel) {
+        Codegen.generate("li", Codegen.V0, 5);
+        Codegen.generate("syscall"); // gets input into V0
+        IdNode id;
+        if (myExp instanceof IdNode) {
+            id = (IdNode) myExp;
+            id.genAddr();
+            Codegen.generateIndexed("sw", Codegen.V0, Codegen.T0, 0);
+        } else {
+            System.err.println("Error: ReadStmt used with an exp that isn't an ID");
+        }
+        
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1492,6 +1505,11 @@ class ReturnStmtNode extends StmtNode {
 
     // TODO
     public void codeGen(String returnLabel) {
+        if (myExp != null) {
+            myExp.codeGen();
+            Codegen.genPop(Codegen.V0);
+        }
+        Codegen.generateWithComment("j", "Return from function", returnLabel);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1711,8 +1729,36 @@ class IdNode extends ExpNode {
         return null;
     }
 
-    // TODO
+    // TODO test
     public void codeGen() {
+        if (mySym.isGlobal()) {
+            Codegen.generate("lw", Codegen.T0, "_" + myStrVal);
+        } else {
+            Codegen.generateIndexed("lw", Codegen.T0, Codegen.FP, mySym.getOffset());
+        }
+        Codegen.genPush(Codegen.T0);
+    }
+
+    // TODO: Test
+    public void genJumpAndLink() {
+        if (isMain()) {
+            Codegen.generate("jal", myStrVal);
+        } else {
+            Codegen.generate("jal", "_" + myStrVal);
+        }
+    }
+
+    // TODO: teeeest
+    /**
+     * pushes address of this ID onto the stack.
+     */
+    public void genAddr() {
+        if (mySym.isGlobal()) {
+            Codegen.generate("la", Codegen.T0, "_" + myStrVal);
+        } else {
+            Codegen.generateIndexed("la", Codegen.T0, Codegen.FP, mySym.getOffset());
+        }
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2040,8 +2086,12 @@ class AssignExpNode extends ExpNode {
         return retType;
     }
 
-    // TODO
     public void codeGen() {
+        myExp.codeGen();
+        ((IdNode)myLhs).genAddr();
+        Codegen.genPop(Codegen.T0); // LHS ID
+        Codegen.generateIndexed("lw", Codegen.T1, Codegen.SP, 4); // RHS Exp, load T1 but don't pop off stack.
+        Codegen.generateIndexed("sw", Codegen.T1, Codegen.T0, 0);
     }
 
     public void unparse(PrintWriter p, int indent) {
