@@ -682,6 +682,10 @@ class FuncDeclNode extends DeclNode {
         Codegen.generate("move", Codegen.T0, Codegen.FP);
         Codegen.generateIndexed("lw", Codegen.FP, Codegen.FP, -4);
         Codegen.generate("move", Codegen.SP, Codegen.T0);
+        if (myId.isMain()) {
+            Codegen.generate("li", Codegen.V0, 10);
+            Codegen.generate("syscall");
+        } else {
         Codegen.generate("jr", Codegen.RA);
     }
 
