@@ -250,6 +250,12 @@ class StmtListNode extends ASTnode {
         }
     }
 
+    public void codeGen(String returnLabel) {
+        for (StmtNode stmt : myStmts) {
+            stmt.codeGen(returnLabel);
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         Iterator<StmtNode> it = myStmts.iterator();
         while (it.hasNext()) {
@@ -385,6 +391,10 @@ class FuncBodyNode extends ASTnode {
      ***/
     public void typeCheck(Type retType) {
         myStmtList.typeCheck(retType);
+    }
+
+    public void codeGen(String returnLabel) {
+        myStmtList.codeGen(returnLabel);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -639,7 +649,41 @@ class FuncDeclNode extends DeclNode {
     }
 
     // TODO
-    public void codeGen() {}
+    public void codeGen() {
+        // Function preamble
+        if (myId.isMain()) {
+            // generate code for main function
+            Codegen.generate(".text");
+            Codegen.generate(".globl", " main");
+            Codegen.genLabel("main");
+        } else {
+            // generate code for other functions
+            Codegen.generate(".text");
+            Codegen.genLabel("_" + myId.name());
+        }
+
+        // Function entry
+        Codegen.generate("# Function entry");
+        Codegen.generateIndexed("sw", Codegen.RA, Codegen.SP, 0);
+        Codegen.generate("subu", Codegen.SP, Codegen.SP, 4);
+        Codegen.generateIndexed("sw", Codegen.FP, Codegen.SP, 0);
+        Codegen.generate("subu", Codegen.SP, Codegen.SP, 4);
+        Codegen.generate("addu", Codegen.FP, Codegen.SP, 8);
+        Codegen.generate("subu", Codegen.SP, Codegen.SP, myId.localsSize());
+
+        // Function body, return label passed down for return statements
+        String returnLabel = Codegen.nextLabel();
+        Codegen.generate("# Function body");
+        myBody.codeGen(returnLabel);
+
+        // Function exit
+        Codegen.genLabel(returnLabel, "Exit function: " + myId.name());
+        Codegen.generateIndexed("lw", Codegen.RA, Codegen.FP, 0);
+        Codegen.generate("move", Codegen.T0, Codegen.FP);
+        Codegen.generateIndexed("lw", Codegen.FP, Codegen.FP, -4);
+        Codegen.generate("move", Codegen.SP, Codegen.T0);
+        Codegen.generate("jr", Codegen.RA);
+    }
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -788,8 +832,10 @@ class StructDeclNode extends DeclNode {
         return null;
     }
 
-    // TODO
-    public void codeGen() {}
+    public void codeGen() {
+        // Structs not required for this assignment
+        return;
+    }
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -896,7 +942,8 @@ class StructNode extends TypeNode {
 // Strongly suggested to write codegen for WriteStmtNodes first.
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTab symTab); 
-    abstract public void typeCheck(Type retType); 
+    abstract public void typeCheck(Type retType);
+    abstract public void codeGen(String returnLabel);
 }
 
 class AssignStmtNode extends StmtNode {
@@ -917,6 +964,10 @@ class AssignStmtNode extends StmtNode {
      ***/
     public void typeCheck(Type retType) {
         myAssign.typeCheck();
+    }
+
+    // TODO
+    public void codeGen(String returnLabel) {
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -954,6 +1005,9 @@ class PostIncStmtNode extends StmtNode {
         }
     }
 
+    // TODO
+    public void codeGen(String returnLabel) {}
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         myExp.unparse(p, 0);
@@ -988,6 +1042,9 @@ class PostDecStmtNode extends StmtNode {
                          "Arithmetic operator with non-integer operand");
         }
     }
+
+    // TODO
+    public void codeGen(String returnLabel) {}
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1040,6 +1097,10 @@ class IfStmtNode extends StmtNode {
         }
         
         myStmtList.typeCheck(retType);
+    }
+
+    // TODO
+    public void codeGen(String returnLabel) {
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1120,6 +1181,10 @@ class IfElseStmtNode extends StmtNode {
         myElseStmtList.typeCheck(retType);
     }
 
+    // TODO
+    public void codeGen(String returnLabel) {
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("if (");
@@ -1188,6 +1253,10 @@ class WhileStmtNode extends StmtNode {
         myStmtList.typeCheck(retType);
     }
 
+    // TODO
+    public void codeGen(String returnLabel) {
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("while (");
@@ -1238,6 +1307,10 @@ class ReadStmtNode extends StmtNode {
             ErrMsg.fatal(myExp.lineNum(), myExp.charNum(),
                          "Attempt to read struct variable");
         }
+    }
+
+    // TODO
+    public void codeGen(String returnLabel) {
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1291,6 +1364,10 @@ class WriteStmtNode extends StmtNode {
         }
     }
 
+    // TODO
+    public void codeGen(String returnLabel) {
+    }
+
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
         p.print("disp <- (");
@@ -1321,6 +1398,10 @@ class CallStmtNode extends StmtNode {
      ***/
     public void typeCheck(Type retType) {
         myCall.typeCheck();
+    }
+
+    // TODO
+    public void codeGen(String returnLabel) {
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1372,7 +1453,10 @@ class ReturnStmtNode extends StmtNode {
                 ErrMsg.fatal(0, 0, "Missing return value");                
             }
         }
+    }
 
+    // TODO
+    public void codeGen(String returnLabel) {
     }
 
     public void unparse(PrintWriter p, int indent) {
