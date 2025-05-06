@@ -5,3 +5,8 @@ boolean bool.
 void main[] [
 
 ]
+
+integer myFunc[] [
+    integer a.
+    boolean b.
+]
