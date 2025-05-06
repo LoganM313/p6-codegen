@@ -1106,6 +1106,12 @@ class IfStmtNode extends StmtNode {
 
     // TODO
     public void codeGen(String returnLabel) {
+        String endLabel = Codegen.nextLabel();
+        myExp.codeGen(); // put result of exp on stack
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("beq", Codegen.T0, "0", endLabel);
+        myStmtList.codeGen(returnLabel);
+        Codegen.genLabel(endLabel);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1535,8 +1541,9 @@ class TrueNode extends ExpNode {
         return new BooleanType();
     }
 
-    // TODO
     public void codeGen() {
+        Codegen.generateWithComment("li", "load true boolean lit", Codegen.T0, "1");
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1574,8 +1581,9 @@ class FalseNode extends ExpNode {
         return new BooleanType();
     }
 
-    // TODO
     public void codeGen() {
+        Codegen.generateWithComment("li", "load false boolean lit", Codegen.T0, "0");
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
