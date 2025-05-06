@@ -1,20 +1,30 @@
 integer a.
 boolean bool.
 
-void main[] [
-    if (FALSE) {
-        disp <- "Inside if statement".
+void testIfStmt[] [
+    if (TRUE) {
+        disp <- "Inside if statement 1".
     }
-    disp <- "End of if stmt\n".
+    disp <- "End of if stmt 1\n".
 
     if (FALSE) {
-        disp <- "True branch\n".
-    } else {
-        disp <- "False branch\n".
+        disp <- "BAD!".
     }
 ]
 
-integer myFunc[] [
-    integer a.
-    boolean b.
+void main[] [
+    integer c.
+    integer q.
+    c = q = 5.
+    disp <- c.
+    input -> c.
+    testIfStmt().
+    if (TRUE) {
+        disp <- "You wrote ".
+        disp <- c.
+        return.
+    } else {
+        disp <- "False branch\n".
+    }
+    disp <- "End of if-else stmt".
 ]
