@@ -1104,12 +1104,11 @@ class IfStmtNode extends StmtNode {
         myStmtList.typeCheck(retType);
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
         String endLabel = Codegen.nextLabel();
         myExp.codeGen(); // put result of exp on stack
         Codegen.genPop(Codegen.T0);
-        Codegen.generate("beq", Codegen.T0, "0", endLabel);
+        Codegen.generate("beq", Codegen.T0, Codegen.FALSE, endLabel);
         myStmtList.codeGen(returnLabel);
         Codegen.genLabel(endLabel);
     }
@@ -1194,6 +1193,17 @@ class IfElseStmtNode extends StmtNode {
 
     // TODO
     public void codeGen(String returnLabel) {
+        String falseLabel = Codegen.nextLabel();
+        String endIfLabel = Codegen.nextLabel();
+        Codegen.generate("# If-else stmt");
+        myExp.codeGen(); // evaluate expr and put it on the stack
+        Codegen.genPop(Codegen.T0);
+        Codegen.generateWithComment("beq", "Branch to false", Codegen.T0, Codegen.FALSE, falseLabel);
+        myThenStmtList.codeGen(returnLabel);
+        Codegen.generateWithComment("b", "Branch to end of if-else", endIfLabel);
+        Codegen.genLabel(falseLabel, "False branch");
+        myElseStmtList.codeGen(returnLabel);
+        Codegen.genLabel(endIfLabel, "End of if-else stmt");
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -1542,7 +1552,7 @@ class TrueNode extends ExpNode {
     }
 
     public void codeGen() {
-        Codegen.generateWithComment("li", "load true boolean lit", Codegen.T0, "1");
+        Codegen.generateWithComment("li", "True boolean lit", Codegen.T0, Codegen.TRUE);
         Codegen.genPush(Codegen.T0);
     }
 
@@ -1582,7 +1592,7 @@ class FalseNode extends ExpNode {
     }
 
     public void codeGen() {
-        Codegen.generateWithComment("li", "load false boolean lit", Codegen.T0, "0");
+        Codegen.generateWithComment("li", "False boolean lit", Codegen.T0, Codegen.FALSE);
         Codegen.genPush(Codegen.T0);
     }
 
