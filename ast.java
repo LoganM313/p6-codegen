@@ -648,7 +648,6 @@ class FuncDeclNode extends DeclNode {
         myBody.typeCheck(myType.type());
     }
 
-    // TODO
     public void codeGen() {
         // Function preamble
         if (myId.isMain()) {
@@ -943,8 +942,6 @@ class StructNode extends TypeNode {
 // ****  StmtNode and its subclasses
 // **********************************************************************
 
-// BE ADVISED:
-// Strongly suggested to write codegen for WriteStmtNodes first.
 abstract class StmtNode extends ASTnode {
     abstract public void nameAnalysis(SymTab symTab); 
     abstract public void typeCheck(Type retType);
@@ -971,7 +968,6 @@ class AssignStmtNode extends StmtNode {
         myAssign.typeCheck();
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
         myAssign.codeGen();
         Codegen.generateWithComment("addu", "Ignore assignExp's value in stack", Codegen.SP, Codegen.SP, "4");
@@ -1193,7 +1189,6 @@ class IfElseStmtNode extends StmtNode {
         myElseStmtList.typeCheck(retType);
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
         String falseLabel = Codegen.nextLabel();
         String endIfLabel = Codegen.nextLabel();
@@ -1503,7 +1498,6 @@ class ReturnStmtNode extends StmtNode {
         }
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
         if (myExp != null) {
             myExp.codeGen();
@@ -1845,7 +1839,7 @@ class StringLitNode extends ExpNode {
         return new StringType();
     }
 
-    // TODO
+    // TODO: add hashmap to avoid duplicate strings
     public void codeGen() {
         String label = Codegen.nextLabel();
         Codegen.generate(".data");
@@ -2099,7 +2093,7 @@ class AssignExpNode extends ExpNode {
         myLhs.unparse(p, 0);
         p.print(" = ");
         myExp.unparse(p, 0);
-        if (indent != -1)  p.print(")");   
+        if (indent != -1)  p.print(")");
     }
 
     // 2 children
