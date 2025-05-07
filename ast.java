@@ -2183,6 +2183,9 @@ class CallExpNode extends ExpNode {
 
     // TODO
     public void codeGen() {
+        myExpList.codeGen(); // put arguments onto stack
+        Codegen.generate("jal", "_" + myId.name());
+        Codegen.genPush(Codegen.V0); // push result onto stack
     }
 
     public void unparse(PrintWriter p, int indent) {
