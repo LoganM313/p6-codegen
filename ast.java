@@ -2499,8 +2499,22 @@ class AndNode extends BooleanExpNode {
         super(exp1, exp2);
     }
 
-    // TODO
+    @Override 
     public void codeGen() {
+        myExp1.codeGen();
+        String falseCon = Codegen.nextLabel();
+        Codegen.generate("beqz", Codegen.T0, falseCon); //if T0 is false, jump to false branch
+        myExp2.codeGen();
+        getOpCode();
+        String endCon = Codegen.nextLabel();
+        Codegen.generate("b", endCon);
+        Codegen.genLabel(falseCon); //jump here
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endCon);
+    }
+
+    public void getOpCode(){
+        Codegen.genPush(Codegen.T1);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2517,8 +2531,21 @@ class OrNode extends BooleanExpNode {
         super(exp1, exp2);
     }
 
-    // TODO
     public void codeGen() {
+        myExp1.codeGen();
+        String falseCon = Codegen.nextLabel();
+        Codegen.generate("bnez", Codegen.T0, falseCon); // if T0 is not equal to zero, jump to false branch
+        myExp2.codeGen();
+        getOpCode();
+        String endCon = Codegen.nextLabel();
+        Codegen.generate("b", endCon);
+        Codegen.genLabel(falseCon); // jump here
+        Codegen.genPush(Codegen.T0);
+        Codegen.genLabel(endCon);
+    }
+
+    public void getOpCode() {
+        Codegen.genPush(Codegen.T1);
     }
 
     public void unparse(PrintWriter p, int indent) {
