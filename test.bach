@@ -171,17 +171,17 @@ void testBinaryOps[] [
     return.
 
     # AND node
-    if(TRUE && TRUE){
+    if(TRUE & TRUE){
         disp <- "And Node : PASSED\n".
     } else {
         disp <- "And Node : FAILED\n".
     }
-    if(FALSE && TRUE){
+    if(FALSE & TRUE){
         disp <- "And Node : FAILED\n".
     } else {
         disp <- "And Node : PASSED\n".
     }
-    if(TRUE && FALSE){
+    if(TRUE & FALSE){
         disp <- "And Node : FAILED\n".
     } else {
         disp <- "And Node : PASSED\n".
@@ -226,12 +226,32 @@ void testWhileLoop[] [
     }
 ]
 
+void testDupString[] [
+    disp <- "This string is a duplicate\n".
+    disp <- "This string is a duplicate\n".
+    return.
+]
+
+void testGlobalVar[] [
+    bool = TRUE.
+    a = 10.
+    if (bool) {
+        a++.
+    }
+    if (a == 11) {
+        disp <- "Global var: PASSED".
+    }
+]
+
 void main[] [
     #testIfStmt().
     #testInput().
     #testArguments(15, TRUE, 12).
     #testIncDec().
     #testReturn().
+
     testBinaryOps().
     testWhileLoop().
+    testDupString().
+    testGlobalVar().
 ]
