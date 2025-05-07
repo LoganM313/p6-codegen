@@ -775,7 +775,7 @@ class FormalDeclNode extends DeclNode {
         return sym;
     }
 
-    // TODO
+    // Don't need to generate code for formals
     public void codeGen() {}
 
     public void unparse(PrintWriter p, int indent) {
@@ -1451,7 +1451,6 @@ class CallStmtNode extends StmtNode {
         myCall.typeCheck();
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
         myCall.codeGen();
         Codegen.generate("addu", Codegen.SP, Codegen.SP, 4); // pop 
@@ -2102,7 +2101,7 @@ class AssignExpNode extends ExpNode {
         ((IdNode)myLhs).genAddr();
         Codegen.genPop(Codegen.T0); // LHS ID
         Codegen.generateIndexed("lw", Codegen.T1, Codegen.SP, 4); // RHS Exp, load T1 but don't pop off stack.
-        Codegen.generateIndexed("sw", Codegen.T1, Codegen.T0, 0);
+        Codegen.generateIndexed("sw", Codegen.T1, Codegen.T0, 0); // Store T1 (RHS) in T0 (addr of lhs)
     }
 
     public void unparse(PrintWriter p, int indent) {
