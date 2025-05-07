@@ -168,6 +168,44 @@ void testBinaryOps[] [
         disp <- "Less Equal Node (Equal): FAILED\n".
     }
     return.
+
+    # AND node
+    if(TRUE && TRUE){
+        disp <- "And Node : PASSED\n".
+    } else {
+        disp <- "And Node : FAILED\n".
+    }
+    if(FALSE && TRUE){
+        disp <- "And Node : FAILED\n".
+    } else {
+        disp <- "And Node : PASSED\n".
+    }
+    if(TRUE && FALSE){
+        disp <- "And Node : FAILED\n".
+    } else {
+        disp <- "And Node : PASSED\n".
+    }
+
+    # Or node
+    if(TRUE | FALSE){
+        disp <- "Or Node : PASSED\n".
+    } else {
+        disp <- "Or Node : FAILED\n".
+    }
+    if(FALSE | TRUE){
+        disp <- "Or Node : PASSED\n".
+    } else {
+        disp <- "Or Node : FAILED\n".
+    }
+    if(FALSE | FALSE){
+        disp <- "Or Node : FAILED\n".
+    } else {
+        disp <- "Or Node : PASSED\n".
+    }
+]
+
+integer testReturn[][
+    return 5.
 ]
 
 void main[] [
@@ -175,5 +213,6 @@ void main[] [
     #testInput().
     #testArguments(15, TRUE, 12).
     #testIncDec().
+    #testReturn().
     testBinaryOps().
 ]
