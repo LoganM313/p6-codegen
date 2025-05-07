@@ -1017,7 +1017,15 @@ class PostIncStmtNode extends StmtNode {
     }
 
     // TODO
-    public void codeGen(String returnLabel) {}
+    public void codeGen(String returnLabel) {
+        ((IdNode)myExp).genAddr();
+        ((IdNode)myExp).codeGen();
+        Codegen.genPop(Codegen.T1); // val
+        Codegen.genPop(Codegen.T0); // dst
+
+        Codegen.generate("addi", Codegen.T1, Codegen.T1, 1); // increment val
+        Codegen.generateIndexed("sw", Codegen.T1, Codegen.T0, 0);
+    }
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -1055,7 +1063,15 @@ class PostDecStmtNode extends StmtNode {
     }
 
     // TODO
-    public void codeGen(String returnLabel) {}
+    public void codeGen(String returnLabel) {
+        ((IdNode) myExp).genAddr();
+        ((IdNode) myExp).codeGen();
+        Codegen.genPop(Codegen.T1); // val
+        Codegen.genPop(Codegen.T0); // dst
+
+        Codegen.generate("addi", Codegen.T1, Codegen.T1, -1); // decrement val
+        Codegen.generateIndexed("sw", Codegen.T1, Codegen.T0, 0);
+    }
 
     public void unparse(PrintWriter p, int indent) {
         doIndent(p, indent);
@@ -2181,7 +2197,7 @@ class CallExpNode extends ExpNode {
         return fctnSym.getReturnType();
     }
 
-    // TODO
+    // TODO: Test
     public void codeGen() {
         myExpList.codeGen(); // put arguments onto stack
         Codegen.generate("jal", "_" + myId.name());
