@@ -312,6 +312,12 @@ class ExpListNode extends ASTnode {
         }
     }
 
+    public void codeGen() {
+        for (int i = myExps.size() - 1; i >= 0; i--) {
+            myExps.get(i).codeGen();
+        }
+    }
+
     public void unparse(PrintWriter p, int indent) {
         Iterator<ExpNode> it = myExps.iterator();
         if (it.hasNext()) {         // if there is at least one element
@@ -1447,6 +1453,8 @@ class CallStmtNode extends StmtNode {
 
     // TODO
     public void codeGen(String returnLabel) {
+        myCall.codeGen();
+        Codegen.generate("addu", Codegen.SP, Codegen.SP, 4); // pop 
     }
 
     public void unparse(PrintWriter p, int indent) {
