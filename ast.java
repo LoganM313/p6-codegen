@@ -1757,7 +1757,6 @@ class IdNode extends ExpNode {
         return null;
     }
 
-    // TODO test
     public void codeGen() {
         if (mySym.isGlobal()) {
             Codegen.generate("lw", Codegen.T0, "_" + myStrVal);
@@ -1767,7 +1766,6 @@ class IdNode extends ExpNode {
         Codegen.genPush(Codegen.T0);
     }
 
-    // TODO: Test
     public void genJumpAndLink() {
         if (isMain()) {
             Codegen.generate("jal", myStrVal);
@@ -1776,7 +1774,6 @@ class IdNode extends ExpNode {
         }
     }
 
-    // TODO: teeeest
     /**
      * pushes address of this ID onto the stack.
      */
@@ -1873,7 +1870,6 @@ class StringLitNode extends ExpNode {
         return new StringType();
     }
 
-    // TODO: test hashmap impl
     public void codeGen() {
         String label;
         if (ProgramNode.stringLiterals.get(myStrVal) == null) {
