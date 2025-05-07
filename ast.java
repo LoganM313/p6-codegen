@@ -2248,6 +2248,17 @@ abstract class BinaryExpNode extends ExpNode {
         myExp2.nameAnalysis(symTab);
     }
 
+    abstract void getOpCode();
+
+    public void codeGen(){
+        myExp1.codeGen();
+        myExp2.codeGen();
+
+        Codegen.genPop(Codegen.T1);
+        Codegen.genPop(Codegen.T0);
+        getOpCode();
+    }
+
     // 2 children
     protected ExpNode myExp1;
     protected ExpNode myExp2;
@@ -2525,7 +2536,10 @@ class PlusNode extends ArithmeticExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("add", Codegen.T0, Codegen.T0, Codegen.T1);
+
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2543,8 +2557,12 @@ class MinusNode extends ArithmeticExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("sub", Codegen.T0, Codegen.T0, Codegen.T1);
+
+        Codegen.genPush(Codegen.T0);
     }
+    
 
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2561,8 +2579,12 @@ class TimesNode extends ArithmeticExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("mult", Codegen.T0, Codegen.T1);
+        Codegen.generate("mfhi", Codegen.T0);
+        Codegen.genPush(Codegen.T0);
     }
+    
 
     public void unparse(PrintWriter p, int indent) {
         p.print("(");
@@ -2579,7 +2601,10 @@ class DivideNode extends ArithmeticExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("div", Codegen.T0, Codegen.T1);
+        Codegen.generate("mflo", Codegen.T0);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2597,7 +2622,9 @@ class EqualsNode extends EqualityExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("seq", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2615,7 +2642,9 @@ class NotEqNode extends EqualityExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("sne", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2633,7 +2662,9 @@ class GreaterNode extends RelationalExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("sgt", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2651,7 +2682,9 @@ class GreaterEqNode extends RelationalExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("sge", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2669,7 +2702,9 @@ class LessNode extends RelationalExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("slt", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
@@ -2687,7 +2722,9 @@ class LessEqNode extends RelationalExpNode {
     }
 
     // TODO
-    public void codeGen() {
+    public void getOpCode() {
+        Codegen.generate("sle", Codegen.T0, Codegen.T0, Codegen.T1);
+        Codegen.genPush(Codegen.T0);
     }
 
     public void unparse(PrintWriter p, int indent) {
