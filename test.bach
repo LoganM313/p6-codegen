@@ -60,10 +60,6 @@ void testArguments[integer int1, boolean bool, integer int2] [
         disp <- int2.
         disp <- " expected 12\n".
     }
-
-    disp <- int1.
-    disp <- bool.
-    disp <- int2.
 ]
 
 void testIncDec[] [
@@ -86,9 +82,98 @@ void testIncDec[] [
     }
 ]
 
+void testBinaryOps[] [
+    # Plus node
+    if (5 + 10 == 15) {
+        disp <- "Plus Node: PASSED\n".
+    } else {
+        disp <- "Plus Node: FAILED\n".
+    }
+
+    # Minus node
+    if (5 - 10 == -5) {
+        disp <- "Minus Node: PASSED\n".
+    } else {
+        disp <- "Minus Node: FAILED\n".
+    }
+
+    # Times node
+    if (5 * 10 == 50) {
+        disp <- "Times Node: PASSED\n".
+    } else {
+        disp <- "Times Node: FAILED\n".
+    }
+
+    # Divide node
+    if (10 / 5 == 2) {
+        disp <- "Divide Node: PASSED\n".
+    } else {
+        disp <- "Divide Node: FAILED\n".
+    }
+    if (5 / 2 == 2) {
+        disp <- "Divide Node (Integer Division): PASSED\n".
+    } else {
+        disp <- "Divide Node (Integer Division): FAILED\n".
+    }
+
+    # Equals node
+    if (5 == 5) {
+        disp <- "Equals Node: PASSED\n".
+    } else {
+        disp <- "Equals Node: FAILED\n".
+    }
+
+    # Not equal node
+    if (5 ^= 6) {
+        disp <- "Not Equals Node: PASSED\n".
+    } else {
+        disp <- "Not Equals Node: FAILED\n".
+    }
+
+    # Greater node
+    if (5 > 1) {
+        disp <- "Greater Node: PASSED\n".
+    } else {
+        disp <- "Greater Node: FAILED\n".
+    }
+
+    # Greater node
+    if (5 >= 1) {
+        disp <- "Greater Equal Node (Greater): PASSED\n".
+    } else {
+        disp <- "Greater Equal Node (Greater): FAILED\n".
+    }
+    if (5 >= 5) {
+        disp <- "Greater Equal Node (Equal): PASSED\n".
+    } else {
+        disp <- "Greater Equal Node (Equal): FAILED\n".
+    }
+
+    # Less node
+    if (1 < 5) {
+        disp <- "Less Node: PASSED\n".
+    } else {
+        disp <- "Less Node: FAILED\n".
+    }
+
+    # Less equal node
+    if (1 <= 5) {
+        disp <- "Less Equal Node (Less): PASSED\n".
+    } else {
+        disp <- "Less Equal Node (Less): FAILED\n".
+    }
+    if (5 <= 5) {
+        disp <- "Less Equal Node (Equal): PASSED\n".
+    } else {
+        disp <- "Less Equal Node (Equal): FAILED\n".
+    }
+    return.
+]
+
 void main[] [
-    # testIfStmt().
-    # testInput().
-    # testArguments(15, TRUE, 12).
-    testIncDec().
+    #testIfStmt().
+    #testInput().
+    #testArguments(15, TRUE, 12).
+    #testIncDec().
+    testBinaryOps().
 ]

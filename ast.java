@@ -2372,6 +2372,10 @@ class UnaryMinusNode extends UnaryExpNode {
 
     // TODO
     public void codeGen() {
+        myExp.codeGen();
+        Codegen.genPop(Codegen.T0);
+        Codegen.generate("neg", Codegen.T0, Codegen.T0);
+        Codegen.genPush(Codegen.T0);
     }
 }
 
@@ -2643,7 +2647,7 @@ class TimesNode extends ArithmeticExpNode {
     // TODO
     public void getOpCode() {
         Codegen.generate("mult", Codegen.T0, Codegen.T1);
-        Codegen.generate("mfhi", Codegen.T0);
+        Codegen.generate("mflo", Codegen.T0);
         Codegen.genPush(Codegen.T0);
     }
     
