@@ -1430,7 +1430,7 @@ class WriteStmtNode extends StmtNode {
 
     public void codeGen(String returnLabel) {
         myExp.codeGen(); // put exp value on top of stack
-        if (myType.isIntegerType()) {
+        if (myType.isIntegerType() || myType.isBooleanType()) {
             // integer write stmt
             Codegen.genPop(Codegen.A0);
             Codegen.generate("li", Codegen.V0, 1);
@@ -1441,7 +1441,6 @@ class WriteStmtNode extends StmtNode {
             Codegen.generate("li", Codegen.V0, 4);
             Codegen.generate("syscall");
         }
-
     }
 
     public void unparse(PrintWriter p, int indent) {
