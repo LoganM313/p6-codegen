@@ -258,6 +258,20 @@ void testStringEq[] [
     }
 ]
 
+void testBoolInputOutput[] [
+    boolean inBool.
+    disp <- TRUE.
+    disp <- "\n".
+    disp <- FALSE.
+    disp <- "\n".
+    input -> inBool.
+    if (inBool) {
+        disp <- "You entered 1 (TRUE)".
+    } else {
+        disp <- "You entered 0 (FALSE)".
+    }
+]
+
 void main[] [
     testIfStmt().
     testInput().
@@ -270,4 +284,6 @@ void main[] [
     testDupString().
     testGlobalVar().
     testStringEq().
+
+    testBoolInputOutput().
 ]
