@@ -3,28 +3,92 @@ boolean bool.
 
 void testIfStmt[] [
     if (TRUE) {
-        disp <- "Inside if statement 1".
+        disp <- "Inside if statement. GOOD!\n".
     }
-    disp <- "End of if stmt 1\n".
 
     if (FALSE) {
         disp <- "BAD!".
     }
+
+    if (TRUE) {
+        disp <- "Inside if-else statement. GOOD!\n".
+    } else {
+        disp <- "BAD!".
+    }
+
+    if (FALSE) {
+        disp <- "BAD!".
+    } else {
+        disp <- "Inside other if-else statement. GOOD!\n".
+    }
+    return.
+]
+
+void testInput[] [
+    integer testIn.
+    disp <- "PICK A NUMBER...\n".
+    input -> testIn.
+    disp <- "YOU WROTE THE NUMBER ".
+    disp <- testIn.
+    disp <- "\n".
+    return.
+]
+
+void testArguments[integer int1, boolean bool, integer int2] [
+    disp <- "Testing arguments...\n".
+    if (int1 == 15) {
+        disp <- "1st argument... GOOD!\n".
+    } else {
+        disp <- "1st argument... BAD!\n".
+        disp <- "Got ".
+        disp <- int1.
+        disp <- " expected 15\n".
+    }
+    if (bool == TRUE) {
+        disp <- "2nd argument... GOOD!\n".
+    } else {
+        disp <- "2nd argument... BAD!\n".
+        disp <- "Got ".
+        disp <- bool.
+        disp <- " expected TRUE\n".
+    }
+    if (int2 == 12) {
+        disp <- "3rd argument... GOOD!\n".
+    } else {
+        disp <- "3rd argument... BAD!\n".
+        disp <- "Got ".
+        disp <- int2.
+        disp <- " expected 12\n".
+    }
+
+    disp <- int1.
+    disp <- bool.
+    disp <- int2.
+]
+
+void testIncDec[] [
+    integer myInt.
+    disp <- "Testing increment and decrement statements...\n".
+    myInt = 10.
+    myInt++.
+    if (myInt == 11) {
+        disp <- "Increment: PASSED\n".
+    } else {
+        disp <- "Increment: FAILED\n".
+    }
+
+    myInt = 50.
+    myInt--.
+    if (myInt == 49) {
+        disp <- "Decrement: PASSED\n".
+    } else {
+        disp <- "Decrement: FAILED\n".
+    }
 ]
 
 void main[] [
-    integer c.
-    integer q.
-    c = q = 5.
-    disp <- c.
-    input -> c.
-    testIfStmt().
-    if (TRUE) {
-        disp <- "You wrote ".
-        disp <- c.
-        return.
-    } else {
-        disp <- "False branch\n".
-    }
-    disp <- "End of if-else stmt".
+    # testIfStmt().
+    # testInput().
+    # testArguments(15, TRUE, 12).
+    testIncDec().
 ]
