@@ -220,9 +220,9 @@ void testWhileLoop[] [
         disp <- "\n".
     }
     if (myInt == 10) {
-        disp <- "While Statement: PASSED".
+        disp <- "While Statement: PASSED\n".
     } else {
-        disp <- "While Statement: FAILED".
+        disp <- "While Statement: FAILED\n".
     }
 ]
 
@@ -239,19 +239,35 @@ void testGlobalVar[] [
         a++.
     }
     if (a == 11) {
-        disp <- "Global var: PASSED".
+        disp <- "Global var: PASSED\n".
+    }
+]
+
+void testStringEq[] [
+    disp <- "Testing string equality...\n".
+    if ("abc" == "abc") {
+        disp <- "Two equal strings: PASSED\n".
+    } else {
+        disp <- "Two equal strings: FAILED\n".
+    }
+
+    if ("abc" == "w") {
+        disp <- "Two different strings: FAILED\n".
+    } else {
+        disp <- "Two different strings: PASSED\n".
     }
 ]
 
 void main[] [
-    #testIfStmt().
-    #testInput().
-    #testArguments(15, TRUE, 12).
-    #testIncDec().
-    #testReturn().
+    testIfStmt().
+    testInput().
+    testArguments(15, TRUE, 12).
+    testIncDec().
+    testReturn().
 
     testBinaryOps().
     testWhileLoop().
     testDupString().
     testGlobalVar().
+    testStringEq().
 ]
