@@ -1295,8 +1295,17 @@ class WhileStmtNode extends StmtNode {
         myStmtList.typeCheck(retType);
     }
 
-    // TODO
     public void codeGen(String returnLabel) {
+        String startWhileLabel = Codegen.nextLabel();
+        String endWhileLabel = Codegen.nextLabel();
+        Codegen.generate("# While Stmt");
+        Codegen.genLabel(startWhileLabel);
+        myExp.codeGen(); // evaluate expr and put it on the stack
+        Codegen.genPop(Codegen.T0);
+        Codegen.generateWithComment("beq", "Branch to end of while", Codegen.T0, Codegen.FALSE, endWhileLabel);
+        myStmtList.codeGen(returnLabel);
+        Codegen.generateWithComment("b", "Branch to start of while loop", startWhileLabel);
+        Codegen.genLabel(endWhileLabel, "End of while stmt");
     }
 
     public void unparse(PrintWriter p, int indent) {
