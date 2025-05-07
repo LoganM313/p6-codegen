@@ -150,6 +150,7 @@ class ProgramNode extends ASTnode {
      * codeGen
      ***/
     public void codeGen() {
+        stringLiterals = new HashMap<>();
         myDeclList.codeGen();
     }
 
@@ -159,6 +160,7 @@ class ProgramNode extends ASTnode {
 
     // 1 child
     private DeclListNode myDeclList;
+    public static HashMap<String, String> stringLiterals;
 
     public static boolean noMain = true; 
 }
@@ -1839,12 +1841,19 @@ class StringLitNode extends ExpNode {
         return new StringType();
     }
 
-    // TODO: add hashmap to avoid duplicate strings
+    // TODO: test hashmap impl
     public void codeGen() {
-        String label = Codegen.nextLabel();
-        Codegen.generate(".data");
-        Codegen.generateLabeled(label, ".asciiz ", "String", myStrVal);
-        Codegen.generate(".text");
+        String label;
+        if (ProgramNode.stringLiterals.get(myStrVal) == null) {
+            label = Codegen.nextLabel();
+            Codegen.generate(".data");
+            Codegen.generateLabeled(label, ".asciiz ", "String", myStrVal);
+            Codegen.generate(".text");
+            ProgramNode.stringLiterals.put(myStrVal, label);
+        } else {
+            label = ProgramNode.stringLiterals.get(myStrVal);
+        }
+        
         Codegen.generate("la", Codegen.T0, label);
         Codegen.genPush(Codegen.T0);
     }
