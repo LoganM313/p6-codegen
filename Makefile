@@ -58,6 +58,7 @@ SymTabEmptyException.class: SymTabEmptyException.java
 ###
 test: P6.class
 	java -cp $(CP) P6 test.bach test.s
+	java -cp $(CP) P6 factorial.bach factorial.s
 
 ###
 # clean

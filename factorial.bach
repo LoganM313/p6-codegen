@@ -1,0 +1,13 @@
+integer factorial[integer n] [
+    integer result.
+    if (n == 0) {
+        return 1.
+    }
+    result = factorial(n - 1). # This isn't working...
+    return n * result.
+]
+
+void main[] [
+    disp <- "5!:\n".
+    disp <- factorial(5).
+]
